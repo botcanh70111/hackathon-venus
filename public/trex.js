@@ -2746,7 +2746,7 @@
 
 
 function onDocumentLoad() {
-    new Runner('.interstitial-wrapper');
+    new Runner('#content-wrapper');
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);

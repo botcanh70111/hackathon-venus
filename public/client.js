@@ -105,7 +105,7 @@ socket.on('new-connection-client', () => {
 
 //Game has begun
 socket.on('game-started', data => {
-
+	document.querySelector(".main").style.display = "none";
 	//Play sound when start game
 	var audio = new Audio('./assets/raw/start_match.mp3');
 	audio.play();

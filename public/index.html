@@ -29,7 +29,7 @@
 </head>
 
 <body class="scarlet-witch">
-	<div class="content-wrapper">
+	<div id="content-wrapper" class="content-wrapper">
 		<div class="main">
 			<div class="logo">
 				<img alt="Creative Force :: Scarlet Pong Game" src="./assets/images/app-logo.png" width="251" height="88">
@@ -81,7 +81,7 @@
 					<div id="match-making" style="display: none;">
 						<h3 id="searching-for-match">Game is started. Please wait for other player...</h3>
 					</div>
-					<div id="gameplay" style="display: none;" onresize="fit_canvas();">
+					<div style="display: none;" onresize="fit_canvas();">
 						<canvas id="drawing-canvas" width="600" height="500"></canvas>
 					</div>
 
@@ -100,7 +100,7 @@
 	</div>
 
 
-	<div id="gameplay" style="display: none;" onresize="fit_canvas();">
+	<div class="interstitial-wrapper" onresize="fit_canvas();">
 		<div id="messageBox" class="sendmessage">
 			<h1 style="text-align: center;font-family: 'Open Sans', sans-serif;">Press Space to start</h1>
 			<div class="niokbutton" onclick="okbuttonsend()"></div>
