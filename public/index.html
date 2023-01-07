@@ -55,8 +55,8 @@
 							<label for="username">Enter your name</label>
 							<div class="search-online">
 								<input id="input-username" class="input-username" type="text" name="start-game" value="" onchange="changeUsername();" />
-								<button type="button" class="btn btn-primary mr-10 hideFunc" onclick="createRoom();">Create room</button>
-								<button type="button" class="btn btn-primary hideFunc" onclick="playOnline();">Quick Game</button>
+								<button type="button" class="btn btn-primary mr-10 hideFunc" onclick="createMatch();">Create match</button>
+								<button type="button" class="btn btn-primary hideFunc" onclick="quickGame();">Quick Game</button>
 							</div>
 							<div id="room_info" style="display: none;">
 								<span>Room ID: </span>
@@ -83,7 +83,7 @@
 								<label for="username">Enter room Id</label>
 								<div class="search-online">
 									<input id="input-room" class="input-username" type="text" name="start-game" value="" />
-									<button type="button" class="btn btn-primary" onclick="joinRoom();">Join room</button>
+									<button type="button" class="btn btn-primary" onclick="joinMatch();">Join Match</button>
 								</div>
 							</div>
 		
