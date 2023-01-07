@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 // extract from chromium source code by @liuwayong
-(function () {
+var trex = (function () {
     'use strict';
     /**
      * T-Rex runner.
@@ -465,6 +465,7 @@
          * Canvas container width expands out to the full width.
          */
         playIntro: function () {
+            console.log("playIntro indse");
             if (!this.activated && !this.crashed) {
                 this.playingIntro = true;
                 this.tRex.playingIntro = true;
@@ -502,6 +503,8 @@
          * Update the game status to started.
          */
         startGame: function () {
+            console.log("start-game inside");
+
             this.setArcadeMode();
             this.runningTime = 0;
             this.playingIntro = false;
@@ -2745,8 +2748,31 @@
 })();
 
 
-function onDocumentLoad() {
-    new Runner('#content-wrapper');
+// function onDocumentLoad() {
+//     new Runner('#content-wrapper');
+// }
+
+// document.addEventListener('DOMContentLoaded', onDocumentLoad);
+
+// listener socket for start new game
+function startgame() {
+    console.log('start-game');
+
+    // remove lobby
+    document.querySelector(".main").style.display = "none";
+    document.querySelector(".figure").style.display = "none";
+
+    document.getElementById("content-wrapper").classList.add("dinosaur-active");
+
+    // mount to the dom
+    var dinosour = new Runner('#content-wrapper');
+    // do start background
+    dinosour.playIntro();
+
+    // do start character
+    dinosour.play();
 }
 
-document.addEventListener('DOMContentLoaded', onDocumentLoad);
+// var dinosour = new Runner('#content-wrapper');
+// dinosour.startGame();
+
