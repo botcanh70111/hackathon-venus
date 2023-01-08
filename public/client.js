@@ -154,6 +154,7 @@ socket.on('change-username-result', userInfo => {
 });
 
 socket.on('game-start', payload => {
+	console.log("start game from client");
 	console.log(payload);
 	startgame();
 });

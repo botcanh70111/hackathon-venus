@@ -88,7 +88,7 @@ io.on('connection', socket => {
 				matches[key].guestId = socket.id;
 				users[socket.id].status = UserStatus.Playing;
 				users[matches[key].ownerId].status = UserStatus.Playing;
-				socket.broadcast.to(key).emit('game-start', {
+				io.in(key).emit('game-start', {
 					userId1: matches[key].ownerId,
 					userId2: matches[key].guestId,
 					player1GameWins: matches[key].player1GameWins,
@@ -148,7 +148,7 @@ io.on('connection', socket => {
 		matches[roomId].player1SetWins = 0;
 		matches[roomId].player2GameWins = 0;
 		matches[roomId].player2SetWins = 0;
-		socket.broadcast.to(roomId).emit('game-start', {
+		io.in(roomId).emit('game-start', {
 			userId1: matches[roomId].ownerId,
 			userId2: matches[roomId].guestId,
 			player1GameWins: matches[roomId].player1GameWins,
