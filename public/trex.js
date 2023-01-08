@@ -152,7 +152,8 @@ var trex = (function () {
         INVERTED: 'inverted',
         SNACKBAR: 'snackbar',
         SNACKBAR_SHOW: 'snackbar-show',
-        TOUCH_CONTROLLER: 'controller'
+        TOUCH_CONTROLLER: 'controller',
+        ENERMY_POINT: 'enermy-point'
     };
 
 
@@ -360,6 +361,9 @@ var trex = (function () {
 
             this.containerEl = document.createElement('div');
             this.containerEl.className = Runner.classes.CONTAINER;
+
+            
+            // this.containerEl = document.innerHTML = `<div class="${Runner.classes.ENERMY_POINT}"></div>`;
 
             // Player canvas container.
             this.canvas = createCanvas(this.containerEl, this.dimensions.WIDTH,
@@ -1013,6 +1017,14 @@ var trex = (function () {
         container.appendChild(canvas);
 
         return canvas;
+    }
+
+    function createEnermyPoint(container, opt_classname) {
+        var pointDiv = document.createElement('div');
+        pointDiv.className = opt_classname ? Runner.classes.ENERMY_POINT;
+        container.appendChild(pointDiv);
+
+        return pointDiv;
     }
 
 
