@@ -133,7 +133,7 @@ function copyToClipboard(textToCopy) {
         let textArea = document.createElement("textarea");
         textArea.value = textToCopy;
         // make the textarea out of viewport
-        textArea.style.position = "fixed";
+        textArea.style.position = "fixed";		
         textArea.style.left = "-999999px";
         textArea.style.top = "-999999px";
         document.body.appendChild(textArea);
@@ -268,8 +268,8 @@ function startgame(payload) {
 		document.querySelector(".main").style.display = "block";
 		document.querySelector(".figure").style.display = "block";
 		document.querySelector("#room_info").style.display = "none";
-	
-		document.getElementById("score").remove();
+
+		document.getElementById("back").remove();
 	
 		dinosour.stop();
 	});
