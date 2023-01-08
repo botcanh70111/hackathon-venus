@@ -191,7 +191,18 @@ function startgame() {
 
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
-	document.getElementById("content-wrapper").innerHTML += `<div class="enermy-point">Enermy Point: <span id="enermy_point_point">0</span></div>`;
+	document.getElementById("content-wrapper").innerHTML += `
+	<div class="score">
+		<span class="block enermy-point">Match Point: <span id="enermy_point_point">0</span></span>
+		<span class="block enermy-point">Set Point: <span id="enermy_point_point">0</span></span>
+		<span class="block full">
+			<span class="inline-block name-me">ME</span>
+			<span class="inline-block point">10</span>
+			<span class="inline-block dash">-</span>
+			<span class="inline-block name-e">ENERMY</span>
+			<span class="inline-block point">09</span>
+		</span>
+	</div>`;
 
     // mount to the dom
 	console.log('dinosour', dinosour);
@@ -235,6 +246,12 @@ socket.on('player-left', () => {
 
 
 socket.on('return-home', () => {
-	socket.disconnect();
-	document.location.reload();
+	document.querySelector(".main").style.display = "block";
+    document.querySelector(".figure").style.display = "block";
+    document.querySelector("#room_info").style.display = "none";
+    document.getElementById("content-wrapper").classList.remove("dinosaur-active");
+});
+
+socket.on('player-broadcast', players => {
+	document.getElementById('online-players').innerHTML = `Users online: ${players}`;
 });

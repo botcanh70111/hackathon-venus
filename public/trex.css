@@ -171,10 +171,37 @@ html, body {
   box-shadow: none;
 }
 
+.score {
+  margin-top: 100px;
+  position: fixed;
+  padding: 20px;
+  background-color: rgb(255 255 255 / 30%);
+  border-radius: 5px;
+}
+
 .enermy-point {
   font-size: 20px;
   color: white;
-  position: absolute;
-  top: 100px;
-  left: 100px;
 }
+
+.block {
+  display: block;
+  padding-top: 5px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.full {
+  font-size: 30px;
+  color: white;
+}
+
+/* .name-me {
+  color: #00e91d;
+}
+
+.name-e {
+  color: #990d0d;
+} */

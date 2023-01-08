@@ -31,7 +31,7 @@ body {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-	background: #eee url(../images/bg.png) no-repeat top center;
+	background: #eee url(../images/bg.jpg) no-repeat top center;
     background-size: cover;
 }
 
