@@ -781,6 +781,7 @@ var trex = (function () {
          * Game over state.
          */
         gameOver: function () {
+
             this.playSound(this.soundFx.HIT);
             vibrate(200);
 
@@ -807,6 +808,15 @@ var trex = (function () {
 
             // Reset the time clock.
             this.time = getTimeStamp();
+
+            
+            // console.log("Game over");
+            this.customSendEvent();
+
+        },
+
+        customSendEvent: function () {
+            console.log("customSendEvent");
         },
 
         stop: function () {
@@ -2747,32 +2757,16 @@ var trex = (function () {
     };
 })();
 
-
-// function onDocumentLoad() {
-//     new Runner('#content-wrapper');
-// }
-
-// document.addEventListener('DOMContentLoaded', onDocumentLoad);
-
-// listener socket for start new game
-function startgame() {
-    console.log('start-game');
-
+function startgameOffline() {
+    console.log('start-game-offline');
     // remove lobby
     document.querySelector(".main").style.display = "none";
     document.querySelector(".figure").style.display = "none";
-
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
-
     // mount to the dom
     var dinosour = new Runner('#content-wrapper');
     // do start background
     dinosour.playIntro();
-
     // do start character
     dinosour.play();
 }
-
-// var dinosour = new Runner('#content-wrapper');
-// dinosour.startGame();
-

@@ -20,6 +20,25 @@ let interval = setInterval(() => {
 	if (i == '.....') i = '';
 }, 500);
 
+function randomSkinChar() {
+	const list_skin = ['default', 'cat', 'godzilla'];
+	const randomCharNum = Math.floor(Math.random() * list_skin.length);
+	console.log("randomCharNum: ", randomCharNum);
+	switch (randomCharNum) {
+		case 1:
+			document.getElementById('skin_char').innerHTML = `<img id="offline-resources-1x" src="./assets/cat.png"><img id="offline-resources-2x" src="./assets/catx2.png">`;
+			break;
+		
+		case 2:
+			document.getElementById('skin_char').innerHTML = `<img id="offline-resources-1x" src="./assets/godzilla.png"><img id="offline-resources-2x" src="./assets/godzillax2.png">`;
+			break;
+	
+		default:
+			document.getElementById('skin_char').innerHTML = `<img id="offline-resources-1x" src="./assets/default_100_percent/100-offline-sprite.png"><img id="offline-resources-2x" src="./assets/default_200_percent/200-offline-sprite.png">`;
+			break;
+	}
+}
+
 window.onload = function (e) {
 	let userId = localStorage.getItem('user_id');
 	if (!userId) {
@@ -56,6 +75,8 @@ window.onload = function (e) {
 			}
 		  };
 	}
+
+	randomSkinChar();
 };
 
 function showHideStartGame(showElements) {
@@ -111,12 +132,14 @@ function createMatch() {
 
 // join
 function joinMatch() {
+	console.log("join match");
 	let matchId = document.getElementById('input-room');
 	socket.emit('join-match', matchId);
 }
 
 function quickGame() {
 	let roomId = uuid();
+	console.log(roomId)
 	socket.emit('quick-game', roomId);
 }
 
@@ -154,4 +177,55 @@ socket.on('change-username-result', userInfo => {
 
 socket.on('game-start', payload => {
 	console.log(payload);
+	startgame();
+});
+
+
+// t-rex 
+function startgame() {
+    console.log('start-game');
+
+    // remove lobby
+    document.querySelector(".main").style.display = "none";
+    document.querySelector(".figure").style.display = "none";
+
+    document.getElementById("content-wrapper").classList.add("dinosaur-active");
+
+    // mount to the dom
+    var dinosour = new Runner('#content-wrapper');
+    // do start background
+    dinosour.playIntro();
+
+    // do start character
+    dinosour.play();
+}
+
+function changeUsername() {
+	let userId = localStorage.getItem('user_id');
+	if (!userId) {
+		localStorage.setItem('user_id', uuid());
+		userId = localStorage.getItem('user_id');
+	}
+	let username = document.getElementById('input-username').value;
+	console.log('change username:', username);
+	socket.emit(
+		'change-username',
+		{userId: userId, username: username},
+		callback => {
+			if (callback) {
+				console.log('username changed successfully!');
+			}
+			else {
+				console.log('username changed unsuccessfully!!!');
+			}
+		}
+	);
+
+	localStorage.setItem('user_name', document.getElementById('input-username').value);
+}
+
+//Handles opponent leaving game
+socket.on('player-left', () => {
+	socket.disconnect();
+	document.location.reload();
 });
