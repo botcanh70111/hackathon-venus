@@ -2747,6 +2747,19 @@ var trex = (function () {
     };
 })();
 
+function startgameOffline() {
+    console.log('start-game-offline');
+    // remove lobby
+    document.querySelector(".main").style.display = "none";
+    document.querySelector(".figure").style.display = "none";
+    document.getElementById("content-wrapper").classList.add("dinosaur-active");
+    // mount to the dom
+    var dinosour = new Runner('#content-wrapper');
+    // do start background
+    dinosour.playIntro();
+    // do start character
+    dinosour.play();
+}
 
 // function onDocumentLoad() {
 //     new Runner('#content-wrapper');
