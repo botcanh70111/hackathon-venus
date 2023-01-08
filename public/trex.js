@@ -680,7 +680,7 @@ var trex = (function () {
          */
         onKeyDown: function (e) {
             // Prevent native page scrolling whilst tapping on mobile.
-            if (IS_MOBILE && this.playing) {
+            if (this.playing) {
                 e.preventDefault();
             }
 
