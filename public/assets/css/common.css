@@ -84,8 +84,18 @@ body .figure {
 body .main .logo {
     padding-top: 43px;
     padding-left: 47px;
+    position: relative;
 }
 
+body .main .logo .logo-text{   
+    width: 100%;
+}
+body .main .logo .logo-venus{
+    position: absolute;
+    width: 87px;
+    right: -90px;
+    top: 28px;
+}
 body .main .form-container {
     -webkit-box-flex: 1;
     -ms-flex-positive: 1;
@@ -162,7 +172,7 @@ body .main .form-container .form-group {
     text-transform: uppercase;
     letter-spacing: 0.51px;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 17px;
     display: block;
     color: #fff;
 }
@@ -173,7 +183,7 @@ body .main .form-container .form-group {
     width: 100%;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 18px;
     border-radius: 0;
     appearance: none;
     -moz-appearance: none;
@@ -229,7 +239,7 @@ body .main .form-container .form-group {
     font-size: 14px;
     border: 1px solid #D0D0D0;
     border-radius: 4px;
-    height: 37px;
+    height: 42px;
     white-space: nowrap;
     padding: 0 20px 0px 20px;
     background-color: transparent;
@@ -259,7 +269,7 @@ body .main .form-container .form-group {
 }
 
 .btn.btn-primary:hover {
-    background-color: #529922;
+    background-color: #893d93;
 }
 
 .btn.btn-default {
@@ -309,7 +319,7 @@ body .main .form-container .form-group {
 	padding: 10px 15px;
 	border-radius: 4px;
 	margin-right: 10px;
-    height: 37px;
+    height: 42px;
 }
 
 .search-container {
@@ -354,8 +364,8 @@ body .main .form-container .form-group {
 #room_info {
     margin-top: 10px;
     padding: 5px;
-    font-size: 16px;
-    color: black;
+    font-size: 18px;
+    color: #fff;
     font-style: italic;
 }
 
@@ -363,6 +373,7 @@ body .main .form-container .form-group {
     padding-top: 10px;
     cursor: pointer;
     color: #489FFF;
+    display: block;
 }
 
 .hide-form {
