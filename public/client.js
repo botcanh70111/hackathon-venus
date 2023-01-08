@@ -20,6 +20,25 @@ let interval = setInterval(() => {
 	if (i == '.....') i = '';
 }, 500);
 
+function randomSkinChar() {
+	const list_skin = ['default', 'cat', 'godzilla'];
+	const randomCharNum = Math.floor(Math.random() * list_skin.length);
+	console.log("randomCharNum: ", randomCharNum);
+	switch (randomCharNum) {
+		case 1:
+			document.getElementById('skin_char').innerHTML = `<img id="offline-resources-1x" src="./assets/cat.png"><img id="offline-resources-2x" src="./assets/catx2.png">`;
+			break;
+		
+		case 2:
+			document.getElementById('skin_char').innerHTML = `<img id="offline-resources-1x" src="./assets/godzilla.png"><img id="offline-resources-2x" src="./assets/godzillax2.png">`;
+			break;
+	
+		default:
+			document.getElementById('skin_char').innerHTML = `<img id="offline-resources-1x" src="./assets/default_100_percent/100-offline-sprite.png"><img id="offline-resources-2x" src="./assets/default_200_percent/200-offline-sprite.png">`;
+			break;
+	}
+}
+
 window.onload = function (e) {
 	let userId = localStorage.getItem('user_id');
 	if (!userId) {
@@ -56,6 +75,8 @@ window.onload = function (e) {
 			}
 		  };
 	}
+
+	randomSkinChar();
 };
 
 function showHideStartGame(showElements) {
