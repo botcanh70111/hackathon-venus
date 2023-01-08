@@ -389,6 +389,7 @@ var trex = (function () {
 
             if (IS_MOBILE) {
                 this.createTouchController();
+                document.querySelector('#singleplayer').style.display = 'none';
             }
 
             this.startListening();
