@@ -228,7 +228,7 @@ function startgame(payload) {
 	document.getElementById("content-wrapper").innerHTML += `
 
 	<div class="score">
-		<span class="block enermy-point">${payload.username1} Set: <span id="set1">0</span></span>
+		<span class="block enermy-point">${payload.username1} Match: <span id="set1">0</span></span>
 		<span class="block enermy-point">${payload.username1} Set: <span id="set2">0</span></span>
 		<span class="block full">
 			<span id="username1" class="inline-block name-me">${payload.username1}</span>
