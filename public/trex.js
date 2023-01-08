@@ -681,7 +681,7 @@ var trex = (function () {
          */
         onKeyDown: function (e) {
             // Prevent native page scrolling whilst tapping on mobile.
-            if (IS_MOBILE && this.playing) {
+            if (this.playing) {
                 e.preventDefault();
             }
 
@@ -2778,15 +2778,15 @@ function startgameOffline() {
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
     document.getElementById("content-wrapper").innerHTML += `
-	<div class="score">
-		<span class="block enermy-point">Match Point: <span id="enermy_point_point">0</span></span>
-		<span class="block enermy-point">Set Point: <span id="enermy_point_point">0</span></span>
+	<div class="score" id="score">
+		<span class="block enermy-point">Match Point: <span id="match_point">0</span></span>
+		<span class="block enermy-point">Set Point: <span id="me_point">0</span> - <span id="enermy_point">0</span></span>
 		<span class="block full">
 			<span class="inline-block name-me">ME</span>
 			<span class="inline-block point">10</span>
 			<span class="inline-block dash">-</span>
-			<span class="inline-block name-e">ENERMY</span>
 			<span class="inline-block point">09</span>
+            <span class="inline-block name-e">ENERMY</span>
 		</span>
 	</div>`;
 
