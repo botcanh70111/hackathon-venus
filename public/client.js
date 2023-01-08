@@ -74,6 +74,28 @@ window.onload = function (e) {
 				showHideStartGame(true);
 			}
 		  };
+
+		  var typingTimer;                //timer identifier
+		  var doneTypingInterval = 500;  //time in ms
+		 
+		  //on keyup, start the countdown
+		  inputUserName.onkeyup = function () {
+				
+				clearTimeout(typingTimer);
+				
+				typingTimer = setTimeout(function(){
+					doneTyping(inputUserName.value.trim())
+				}, doneTypingInterval);
+			}
+		  //on keydown, clear the countdown
+		  inputUserName.onkeydown = function () {
+			clearTimeout(typingTimer);
+			}
+		  //user is "finished typing," do something
+		  function doneTyping (value) {
+				console.log("TVT fdfsdf")
+			  handleEmitChangeUserName(value);
+		  }
 	}
 
 	randomSkinChar();
@@ -125,6 +147,7 @@ function copyToClipboard(textToCopy) {
 // create
 function createMatch() {
 	let roomId = uuid();
+	localStorage.setItem('room_id', roomId);
 	document.getElementById("room_id").textContent = roomId;
 	document.getElementById("room_info").style.display = "block";
 	socket.emit('create-match', roomId);
@@ -133,7 +156,14 @@ function createMatch() {
 // join
 function joinMatch() {
 	console.log("join match");
-	socket.emit('join-match', document.getElementById('input-room').value);
+	const newValue = document.getElementById('input-room').value;
+	const currentValue = localStorage.getItem('room_id');
+	if(currentValue !== newValue) {
+		socket.emit('join-match', document.getElementById('input-room').value);
+	} else {
+		alert('Cannot invite yourself')
+	}
+	
 }
 
 function quickGame() {
@@ -236,6 +266,26 @@ function changeUsername() {
 	);
 
 	localStorage.setItem('user_name', document.getElementById('input-username').value);
+}
+
+function handleEmitChangeUserName(value) {
+	let userId = localStorage.getItem('user_id');
+	if (!userId) {
+		localStorage.setItem('user_id', uuid());
+		userId = localStorage.getItem('user_id');
+	}
+	socket.emit(
+		'change-username',
+		{userId: userId, username: value},
+		callback => {
+			if (callback) {
+				console.log('username changed successfully!');
+			}
+			else {
+				console.log('username changed unsuccessfully!!!');
+			}
+		}
+	);
 }
 
 //Handles opponent leaving game
