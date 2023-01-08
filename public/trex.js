@@ -1,3 +1,5 @@
+var socket = io.connect('localhost:8888');
+
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -11,6 +13,9 @@ var trex = (function () {
      * @constructor
      * @export
      */
+    
+
+
     function Runner(outerContainerId, opt_config) {
         // Singleton
         if (Runner.instance_) {
@@ -72,7 +77,6 @@ var trex = (function () {
         }
     }
     window['Runner'] = Runner;
-
 
     /**
      * Default game width.
@@ -744,7 +748,9 @@ var trex = (function () {
                 if (Runner.keycodes.RESTART[keyCode] || this.isLeftClickOnCanvas(e) ||
                     (deltaTime >= this.config.GAMEOVER_CLEAR_TIME &&
                         Runner.keycodes.JUMP[keyCode])) {
-                    // this.restart();
+                            if (localStorage.getItem('modeOn') === 'training') {
+                                this.restart();
+                            }
                 }
             } else if (this.paused && isjumpKey) {
                 // Reset the jump state
@@ -816,12 +822,12 @@ var trex = (function () {
 
             
             // console.log("Game over");
-            this.customSendEvent();
-
+            this.customSendEvent(this.distanceRan);
         },
 
-        customSendEvent: function () {
+        customSendEvent: function (score) {
             console.log("customSendEvent");
+            socket.emit('im-die', score);
         },
 
         stop: function () {
@@ -2776,6 +2782,8 @@ function startgameOffline() {
     document.querySelector(".main").style.display = "none";
     document.querySelector(".figure").style.display = "none";
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
+
+    localStorage.setItem('modeOn', 'training');
 
     document.getElementById("content-wrapper").innerHTML += `
 	<div class="score" id="score">

@@ -7,7 +7,7 @@ const uuid = () => {
 var host = window.location.href;
 console.log(host);
 //var socket = io.connect('http://18.139.89.76');
- var socket = io.connect('localhost:8888');
+ var socket = io.connect('hackathon-2023-venus.creativeforce-dev.io');
 
 let game_state;
 
@@ -161,6 +161,7 @@ function joinMatch() {
 	console.log("join match");
 	const newValue = document.getElementById('input-room').value;
 	const currentValue = localStorage.getItem('room_id');
+	localStorage.setItem('modeOn', '');
 	if(currentValue !== newValue) {
 		socket.emit('join-match', document.getElementById('input-room').value);
 	} else {
@@ -173,11 +174,7 @@ function quickGame() {
 	let roomId = uuid();
 	console.log(roomId)
 	socket.emit('quick-game', roomId);
-}
-
-// die
-function imDie(score) {
-	socket.emit('im-die', score);
+	localStorage.setItem('modeOn', '');
 }
 
 // game over
@@ -210,13 +207,13 @@ socket.on('change-username-result', userInfo => {
 socket.on('game-start', payload => {
 	console.log("start game from client");
 	console.log(payload);
-	startgame();
+	startgame(payload);
 });
 
 
 // t-rex 
-function startgame() {
-    console.log('start-game');
+function startgame(payload) {
+    console.log('start-game', payload);
 
     // remove lobby
     document.querySelector(".main").style.display = "none";
@@ -225,15 +222,16 @@ function startgame() {
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
 	document.getElementById("content-wrapper").innerHTML += `
-	<div class="score" id="score">
-		<span class="block enermy-point">Match Point: <span id="match_point">0</span></span>
-		<span class="block enermy-point">Set Point: <span id="me_point">0</span> - <span id="enermy_point">0</span></span>
+
+	<div class="score">
+		<span class="block enermy-point">${payload.username1} Set: <span id="set1">0</span></span>
+		<span class="block enermy-point">${payload.username1} Set: <span id="set2">0</span></span>
 		<span class="block full">
-			<span class="inline-block name-me">ME</span>
-			<span class="inline-block point">10</span>
+			<span id="username1" class="inline-block name-me">${payload.username1}</span>
+			<span id="game1" class="inline-block point">0</span>
 			<span class="inline-block dash">-</span>
-			<span class="inline-block point">09</span>
-            <span class="inline-block name-e">ENERMY</span>
+			<span id="username2" class="inline-block name-e">${payload.username1}</span>
+			<span id="game2" class="inline-block point">0</span>
 		</span>
 	</div>`;
 
@@ -247,6 +245,30 @@ function startgame() {
 
     // do start character
     dinosour.play();
+	
+	socket.on("replay", (payload) => {
+		console.log('replay', payload);
+
+		document.querySelector("#set1").innerHTML = payload.player1SetWins;
+		document.querySelector("#set2").innerHTML = payload.player2SetWins;
+		document.querySelector("#game1").innerHTML = payload.player1GameWins;
+		document.querySelector("#game2").innerHTML = payload.player2GameWins;
+
+		setTimeout(() => {
+			dinosour.restart();
+		}, 2000);
+	});
+
+	socket.on("return-home", () => {
+		document.querySelector(".score").remove();
+		document.querySelector(".main").style.display = "block";
+		document.querySelector(".figure").style.display = "block";
+		document.querySelector("#room_info").style.display = "none";
+	
+		document.getElementById("score").remove();
+	
+		dinosour.stop();
+	});
 }
 
 function changeUsername() {
