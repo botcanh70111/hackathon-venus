@@ -58,6 +58,8 @@ let matches = {};
 io.on('connection', socket => {
 	users[socket.id] = new User(socket);
 
+	console.log(socket.id);
+
 	socket.on('change-username', (userInfo) => {
 		console.log('userinfo:', userInfo.userId);
 		for (var key in users) {
@@ -80,6 +82,7 @@ io.on('connection', socket => {
 	});
 
 	socket.on('quick-game', (roomId) => {
+		console.log("match", matches);
 		for (key in matches) {
 			if (matches[key] && matches[key].status == MatchStatus.WaitingForQuickGame) {
 				socket.join(matches[key].matchId);
@@ -258,12 +261,19 @@ io.on('connection', socket => {
 
 	//Disconnects user
 	socket.on('disconnect', () => {
-		console.log(`Client Disconnected: ${users[socket.id].username}`);
+		console.log(`Client Disconnected: ${users[socket.id]}`);
 		let matchId = users[socket.id].matchId;
 		delete users[socket.id];
 
 		if (matchId) {
 			delete matches[matchId];
+		}
+
+		let user = users[socket.id];
+		if (user && user.socket) {
+			user.socket.emit('player-left');
+			console.log('t3')
+			user.socket.emit('game-history-changed', getUserGameHistory(user.username));
 		}
 	});
 })

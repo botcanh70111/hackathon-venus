@@ -16,6 +16,13 @@
 	<meta name="msapplication-TileColor" content="#da532c">
 	<meta name="theme-color" content="#ffffff">
 	<link rel="stylesheet" href="trex.css">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="trex.js"></script>
+	<!-- <script src="Pong.js"></script> -->
+	<script src="client.js"></script>
+	<script src="modal.js"></script>
 </head>
 
 <body class="scarlet-witch">
@@ -48,9 +55,9 @@
 						<div class="form-group">
 							<label for="username">Enter your name</label>
 							<div class="search-online">
-								<input id="input-username" class="input-username" type="text" name="start-game" value="" onchange="changeUsername();" />
-								<button type="button" class="btn btn-primary mr-10 hideFunc" onclick="createRoom();">Create room</button>
-								<button type="button" class="btn btn-primary hideFunc" onclick="startgame();">Quick Game</button>
+								<input id="input-username" class="input-username" type="text" name="start-game" value="" onchange="changeUsername()" />
+								<button type="button" class="btn btn-primary mr-10 hideFunc" onclick="createMatch();">Create room</button>
+								<button type="button" class="btn btn-primary hideFunc" onclick="quickGame();">Quick Game</button>
 							</div>
 							<div id="room_info" style="display: none;">
 								<span>Room ID: </span>
@@ -183,20 +190,5 @@
 	</script>
 
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<!-- <script src="StaticGame.js"></script> -->
-<!-- <script src="Pong.js"></script> -->
-<script src="client.js"></script>
-<script src="modal.js"></script>
-<script src="trex.js"></script>
-<script>
-	document.onkeydown = function(evt) {
-	evt = evt || window.event;
-	if (evt.keyCode == 32) {
-		var box = document.getElementById("messageBox");
-		box.style.visibility="hidden";
-	}
-	}
-</script>
+
 </html>
