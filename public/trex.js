@@ -2790,6 +2790,8 @@ function startgameOffline() {
 		</span>
 	</div>`;
 
+    document.getElementById("content-wrapper").innerHTML += `<a id="back" href="${window.location.href}">BACK</a>`;
+
     // mount to the dom
     var dinosour = new Runner('#content-wrapper');
     // do start background

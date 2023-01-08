@@ -99,6 +99,9 @@ window.onload = function (e) {
 	}
 
 	randomSkinChar();
+
+	// var audio = new Audio('./assets/raw/start_match.mp3');
+	// audio.play();
 };
 
 function showHideStartGame(showElements) {
@@ -234,6 +237,8 @@ function startgame() {
 		</span>
 	</div>`;
 
+	document.getElementById("content-wrapper").innerHTML += `<a id="back" href="${window.location.href}">BACK</a>`;
+
     // mount to the dom
 	console.log('dinosour', dinosour);
     var dinosour = new Runner('#content-wrapper');
@@ -300,6 +305,7 @@ socket.on('return-home', () => {
     document.querySelector(".figure").style.display = "block";
     document.querySelector("#room_info").style.display = "none";
 	document.getElementById("score").remove();
+	document.getElementById("back").remove();
     document.getElementById("content-wrapper").classList.remove("dinosaur-active");
 });
 
