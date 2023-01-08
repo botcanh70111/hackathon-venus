@@ -152,7 +152,8 @@ var trex = (function () {
         INVERTED: 'inverted',
         SNACKBAR: 'snackbar',
         SNACKBAR_SHOW: 'snackbar-show',
-        TOUCH_CONTROLLER: 'controller'
+        TOUCH_CONTROLLER: 'controller',
+        ENERMY_POINT: 'enermy-point'
     };
 
 
@@ -252,7 +253,7 @@ var trex = (function () {
 
             // Show notification when the activation key is pressed.
             document.addEventListener(Runner.events.KEYDOWN, function (e) {
-                if (Runner.keycodes.JUMP[e.keyCode]) {
+                if (Runner.keycodes.JUMP[e.keyCode] ) {
                     this.containerEl.classList.add(Runner.classes.SNACKBAR_SHOW);
                     document.querySelector('.icon').classList.add('icon-disabled');
                 }
@@ -361,6 +362,9 @@ var trex = (function () {
             this.containerEl = document.createElement('div');
             this.containerEl.className = Runner.classes.CONTAINER;
 
+            
+            this.containerElinnerHTML += `<div class="${Runner.classes.ENERMY_POINT}"></div>`;
+
             // Player canvas container.
             this.canvas = createCanvas(this.containerEl, this.dimensions.WIDTH,
                 this.dimensions.HEIGHT, Runner.classes.PLAYER);
@@ -447,7 +451,7 @@ var trex = (function () {
                     this.containerEl.style.width = this.dimensions.WIDTH + 'px';
                     this.containerEl.style.height = this.dimensions.HEIGHT + 'px';
                     this.distanceMeter.update(0, Math.ceil(this.distanceRan));
-                    this.stop();
+                    // this.stop();
                 } else {
                     this.tRex.draw(0, 0);
                 }
@@ -682,7 +686,7 @@ var trex = (function () {
 
             if (e.target != this.detailsButton) {
                 if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
-                    e.type == Runner.events.TOUCHSTART)) {
+                    e.type == Runner.events.TOUCHSTART || e.type == "mousedown")) {
                     if (!this.playing) {
                         this.loadSounds();
                         this.playing = true;
@@ -704,7 +708,7 @@ var trex = (function () {
                 }
             }
 
-            if (this.playing && !this.crashed && Runner.keycodes.DUCK[e.keyCode]) {
+            if (this.playing && !this.crashed && (Runner.keycodes.DUCK[e.keyCode])) {
                 e.preventDefault();
                 if (this.tRex.jumping) {
                     // Speed drop, activated only when jump key is not pressed.
@@ -891,7 +895,7 @@ var trex = (function () {
         onVisibilityChange: function (e) {
             if (document.hidden || document.webkitHidden || e.type == 'blur' ||
                 document.visibilityState != 'visible') {
-                this.stop();
+                // this.stop();
             } else if (!this.crashed) {
                 this.tRex.reset();
                 this.play();
@@ -1013,6 +1017,14 @@ var trex = (function () {
         container.appendChild(canvas);
 
         return canvas;
+    }
+
+    function createEnermyPoint(container, opt_classname) {
+        var pointDiv = document.createElement('div');
+        pointDiv.className = opt_classname ? Runner.classes.ENERMY_POINT: '';
+        container.appendChild(pointDiv);
+
+        return pointDiv;
     }
 
 
@@ -2763,6 +2775,9 @@ function startgameOffline() {
     document.querySelector(".main").style.display = "none";
     document.querySelector(".figure").style.display = "none";
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
+
+    document.getElementById("content-wrapper").innerHTML += `<div class="${Runner.classes.ENERMY_POINT}">Enermy Point: <span id="enermy_point_point">0</span></div>`;
+
     // mount to the dom
     var dinosour = new Runner('#content-wrapper');
     // do start background
@@ -2770,3 +2785,4 @@ function startgameOffline() {
     // do start character
     dinosour.play();
 }
+
