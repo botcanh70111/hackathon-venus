@@ -112,8 +112,7 @@ function createMatch() {
 // join
 function joinMatch() {
 	console.log("join match");
-	let matchId = document.getElementById('input-room');
-	socket.emit('join-match', matchId);
+	socket.emit('join-match', document.getElementById('input-room').value);
 }
 
 function quickGame() {
@@ -189,7 +188,7 @@ function changeUsername() {
 	console.log('change username:', username);
 	socket.emit(
 		'change-username',
-		{userId: userId, username: username},
+		{userId: userId, username: document.getElementById('input-username').value},
 		callback => {
 			if (callback) {
 				console.log('username changed successfully!');

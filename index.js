@@ -82,20 +82,19 @@ io.on('connection', socket => {
 	});
 
 	socket.on('quick-game', (roomId) => {
-		console.log("match", matches);
 		for (key in matches) {
 			if (matches[key] && matches[key].status == MatchStatus.WaitingForQuickGame) {
 				socket.join(matches[key].matchId);
 				matches[key].guestId = socket.id;
 				users[socket.id].status = UserStatus.Playing;
-				users[matches[roomId].ownerId].status = UserStatus.Playing;
-				socket.broadcast.to(roomId).emit('game-start', {
-					userId1: matches[roomId].ownerId,
-					userId2: matches[roomId].guestId,
-					player1GameWins: matches[roomId].player1GameWins,
-					player1SetWins: matches[roomId].player1SetWins,
-					player2GameWins: matches[roomId].player2GameWins,
-					player2SetWins: matches[roomId].player2SetWins,
+				users[matches[key].ownerId].status = UserStatus.Playing;
+				socket.broadcast.to(key).emit('game-start', {
+					userId1: matches[key].ownerId,
+					userId2: matches[key].guestId,
+					player1GameWins: matches[key].player1GameWins,
+					player1SetWins: matches[key].player1SetWins,
+					player2GameWins: matches[key].player2GameWins,
+					player2SetWins: matches[key].player2SetWins,
 				});
 
 				return;
@@ -106,7 +105,7 @@ io.on('connection', socket => {
 		matches[roomId] = new Match(roomId);
 		users[socket.id].matchId = roomId;
 		users[socket.id].status = UserStatus.WaitingQuickGame;
-		matches[roomId].ownerId = users[socket.id].userId;
+		matches[roomId].ownerId = socket.id;
 		matches[roomId].status = MatchStatus.WaitingForQuickGame,
 		matches[roomId].player1GameWins = 0;
 		matches[roomId].player1SetWins = 0;
@@ -116,15 +115,18 @@ io.on('connection', socket => {
 
 	socket.on('create-match', (roomId) => {
 		socket.join(roomId);
+		console.log("Join room: ", roomId, socket.id);
 		matches[roomId] = new Match(roomId);
 		users[socket.id].matchId = roomId;
 		users[socket.id].status = UserStatus.InMatch;
-		matches[roomId].ownerId = users[socket.id].userId;
+		matches[roomId].ownerId = socket.id;
 		matches[roomId].status = MatchStatus.Inviting,
 		matches[roomId].player1GameWins = 0;
 		matches[roomId].player1SetWins = 0;
 		matches[roomId].player2GameWins = 0;
 		matches[roomId].player2SetWins = 0;
+
+		console.log(matches);
 	});
 
 	socket.on('join-match', (roomId) => {
@@ -132,11 +134,15 @@ io.on('connection', socket => {
 			// send error
 		}
 
+		console.log("matches", matches);
+		console.log("room", roomId);
+		console.log("join", matches[roomId]);
+
 		socket.join(roomId);
+		
 		users[socket.id].matchId = roomId;
 		users[socket.id].status = UserStatus.Playing;
-		matches[roomId].guestId = users[socket.id].userId;
-		matches[roomId].matchId = roomId;
+		matches[roomId].guestId = socket.id;
 		matches[roomId].status = MatchStatus.Playing,
 		matches[roomId].player1GameWins = 0;
 		matches[roomId].player1SetWins = 0;
@@ -261,7 +267,7 @@ io.on('connection', socket => {
 
 	//Disconnects user
 	socket.on('disconnect', () => {
-		console.log(`Client Disconnected: ${users[socket.id]}`);
+		console.log(`Client Disconnected: ${socket.id} - ${users[socket.id]}`);
 		let matchId = users[socket.id].matchId;
 		delete users[socket.id];
 
