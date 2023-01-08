@@ -748,7 +748,9 @@ var trex = (function () {
                 if (Runner.keycodes.RESTART[keyCode] || this.isLeftClickOnCanvas(e) ||
                     (deltaTime >= this.config.GAMEOVER_CLEAR_TIME &&
                         Runner.keycodes.JUMP[keyCode])) {
-                    // this.restart();
+                            if (localStorage.getItem('modeOn') === 'training') {
+                                this.restart();
+                            }
                 }
             } else if (this.paused && isjumpKey) {
                 // Reset the jump state
@@ -2780,6 +2782,8 @@ function startgameOffline() {
     document.querySelector(".main").style.display = "none";
     document.querySelector(".figure").style.display = "none";
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
+
+    localStorage.setItem('modeOn', 'training');
 
     document.getElementById("content-wrapper").innerHTML += `
 	<div class="score" id="score">

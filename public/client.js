@@ -158,6 +158,7 @@ function joinMatch() {
 	console.log("join match");
 	const newValue = document.getElementById('input-room').value;
 	const currentValue = localStorage.getItem('room_id');
+	localStorage.setItem('modeOn', '');
 	if(currentValue !== newValue) {
 		socket.emit('join-match', document.getElementById('input-room').value);
 	} else {
@@ -170,6 +171,7 @@ function quickGame() {
 	let roomId = uuid();
 	console.log(roomId)
 	socket.emit('quick-game', roomId);
+	localStorage.setItem('modeOn', '');
 }
 
 // game over
