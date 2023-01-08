@@ -253,7 +253,7 @@ var trex = (function () {
 
             // Show notification when the activation key is pressed.
             document.addEventListener(Runner.events.KEYDOWN, function (e) {
-                if (Runner.keycodes.JUMP[e.keyCode]) {
+                if (Runner.keycodes.JUMP[e.keyCode] ) {
                     this.containerEl.classList.add(Runner.classes.SNACKBAR_SHOW);
                     document.querySelector('.icon').classList.add('icon-disabled');
                 }
@@ -686,7 +686,7 @@ var trex = (function () {
 
             if (e.target != this.detailsButton) {
                 if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
-                    e.type == Runner.events.TOUCHSTART)) {
+                    e.type == Runner.events.TOUCHSTART || e.type == "mousedown")) {
                     if (!this.playing) {
                         this.loadSounds();
                         this.playing = true;
@@ -708,7 +708,7 @@ var trex = (function () {
                 }
             }
 
-            if (this.playing && !this.crashed && Runner.keycodes.DUCK[e.keyCode]) {
+            if (this.playing && !this.crashed && (Runner.keycodes.DUCK[e.keyCode])) {
                 e.preventDefault();
                 if (this.tRex.jumping) {
                     // Speed drop, activated only when jump key is not pressed.
