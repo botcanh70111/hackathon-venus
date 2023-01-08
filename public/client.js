@@ -131,6 +131,10 @@ function gameOver() {
 	socket.emit('game-over', isWin);
 }
 
+function showHistoryPopup() {
+    openModal(4);
+}
+
 //Gets number of online players
 socket.on('new-connection-client', () => {
 	let userId = localStorage.getItem('user_id');
