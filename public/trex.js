@@ -363,7 +363,7 @@ var trex = (function () {
             this.containerEl.className = Runner.classes.CONTAINER;
 
             
-            // this.containerEl = document.innerHTML = `<div class="${Runner.classes.ENERMY_POINT}"></div>`;
+            this.containerElinnerHTML += `<div class="${Runner.classes.ENERMY_POINT}"></div>`;
 
             // Player canvas container.
             this.canvas = createCanvas(this.containerEl, this.dimensions.WIDTH,
@@ -2775,6 +2775,9 @@ function startgameOffline() {
     document.querySelector(".main").style.display = "none";
     document.querySelector(".figure").style.display = "none";
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
+
+    document.getElementById("content-wrapper").innerHTML += `<div class="${Runner.classes.ENERMY_POINT}">Enermy Point: <span id="enermy_point_point">0</span></div>`;
+
     // mount to the dom
     var dinosour = new Runner('#content-wrapper');
     // do start background
@@ -2782,3 +2785,4 @@ function startgameOffline() {
     // do start character
     dinosour.play();
 }
+

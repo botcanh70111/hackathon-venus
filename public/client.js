@@ -191,6 +191,8 @@ function startgame() {
 
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
+	document.getElementById("content-wrapper").innerHTML += `<div class="enermy-point">Enermy Point: <span id="enermy_point_point">0</span></div>`;
+
     // mount to the dom
     var dinosour = new Runner('#content-wrapper');
     // do start background
