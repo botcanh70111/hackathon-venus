@@ -172,11 +172,6 @@ function quickGame() {
 	socket.emit('quick-game', roomId);
 }
 
-// die
-function imDie(score) {
-	socket.emit('im-die', score);
-}
-
 // game over
 function gameOver() {
 	let isWin = false;
@@ -207,12 +202,12 @@ socket.on('change-username-result', userInfo => {
 socket.on('game-start', payload => {
 	console.log("start game from client");
 	console.log(payload);
-	startgame();
+	startgame(payload);
 });
 
 
 // t-rex 
-function startgame() {
+function startgame(payload) {
     console.log('start-game');
 
     // remove lobby
@@ -222,15 +217,16 @@ function startgame() {
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
 	document.getElementById("content-wrapper").innerHTML += `
-	<div class="score" id="score">
-		<span class="block enermy-point">Match Point: <span id="match_point">0</span></span>
-		<span class="block enermy-point">Set Point: <span id="me_point">0</span> - <span id="enermy_point">0</span></span>
+
+	<div class="score">
+		<span class="block enermy-point">${payload.username1} Set: <span id="set1">0</span></span>
+		<span class="block enermy-point">${payload.username1} Set: <span id="set2">0</span></span>
 		<span class="block full">
-			<span class="inline-block name-me">ME</span>
-			<span class="inline-block point">10</span>
+			<span id="username1" class="inline-block name-me">${payload.username1}</span>
+			<span id="game1" class="inline-block point">0</span>
 			<span class="inline-block dash">-</span>
-			<span class="inline-block point">09</span>
-            <span class="inline-block name-e">ENERMY</span>
+			<span id="username2" class="inline-block name-e">${payload.username1}</span>
+			<span id="game2" class="inline-block point">0</span>
 		</span>
 	</div>`;
 
@@ -242,6 +238,17 @@ function startgame() {
 
     // do start character
     dinosour.play();
+	
+	socket.on("replay", (payload) => {
+		document.querySelector("#set1").innerHTML = payload.player1SetWins;
+		document.querySelector("#set2").innerHTML = payload.player2SetWins;
+		document.querySelector("#game1").innerHTML = payload.player1GameWins;
+		document.querySelector("#game2").innerHTML = payload.player2GameWins;
+
+		setTimeout(() => {
+			dinosour.restart();
+		}, 2000);
+	});
 }
 
 function changeUsername() {
@@ -296,11 +303,14 @@ socket.on('player-left', () => {
 
 
 socket.on('return-home', () => {
+	document.querySelector(".score").remove();
 	document.querySelector(".main").style.display = "block";
     document.querySelector(".figure").style.display = "block";
     document.querySelector("#room_info").style.display = "none";
+
 	document.getElementById("score").remove();
-    document.getElementById("content-wrapper").classList.remove("dinosaur-active");
+
+    //document.getElementById("content-wrapper").classList.remove("dinosaur-active");
 });
 
 socket.on('player-broadcast', players => {

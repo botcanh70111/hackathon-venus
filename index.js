@@ -13,6 +13,9 @@ app.get('/', function (req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
 });
 
+const gameWin = 2;
+const setWin = 1;
+
 //User class
 const UserStatus = {
 	WaitingQuickGame: 1,
@@ -41,6 +44,10 @@ class Match {
 	constructor(roomId) {
 		this.matchId = roomId;
 		this.status = MatchStatus.Inviting,
+		this.ownerId = "",
+		this.guestId = "",
+		this.ownerScore = 0,
+		this.guestScore = 0,
 		this.player1GameWins = 0;
 		this.player1SetWins = 0;
 		this.player2GameWins = 0;
@@ -63,7 +70,7 @@ io.on('connection', socket => {
 	socket.emit('player-broadcast', Object.keys(users).length);
 
 	socket.on('change-username', (userInfo) => {
-		console.log('userinfo:', userInfo.userId);
+		console.log('userinfo:', userInfo.username);
 		for (var key in users) {
 			var user = users[key];
 			console.log('userid:', user.userId);
@@ -85,14 +92,14 @@ io.on('connection', socket => {
 
 	socket.on('quick-game', (roomId) => {
 		for (key in matches) {
-			if (matches[key] && matches[key].status == MatchStatus.WaitingForQuickGame) {
+			if (matches[key] && matches[key].ownerId != socket.id && matches[key].status == MatchStatus.WaitingForQuickGame) {
 				socket.join(matches[key].matchId);
 				matches[key].guestId = socket.id;
 				users[socket.id].status = UserStatus.Playing;
 				users[matches[key].ownerId].status = UserStatus.Playing;
 				io.in(key).emit('game-start', {
-					userId1: matches[key].ownerId,
-					userId2: matches[key].guestId,
+					username1: users[matches[key].ownerId].username,
+					username2: users[matches[key].guestId].username,
 					player1GameWins: matches[key].player1GameWins,
 					player1SetWins: matches[key].player1SetWins,
 					player2GameWins: matches[key].player2GameWins,
@@ -151,8 +158,8 @@ io.on('connection', socket => {
 		matches[roomId].player2GameWins = 0;
 		matches[roomId].player2SetWins = 0;
 		io.in(roomId).emit('game-start', {
-			userId1: matches[roomId].ownerId,
-			userId2: matches[roomId].guestId,
+			username1: users[matches[roomId].ownerId].username,
+			username2: users[matches[roomId].guestId].username,
 			player1GameWins: matches[roomId].player1GameWins,
 			player1SetWins: matches[roomId].player1SetWins,
 			player2GameWins: matches[roomId].player2GameWins,
@@ -161,108 +168,120 @@ io.on('connection', socket => {
 	});
 
 	socket.on('im-die', (score) => {
-		let roomId = users[socket.id];
+		let roomId = users[socket.id].matchId;
 		let match = matches[roomId];
+		if (!match) {
+			return;
+		}
+
 		let ownerId = match.ownerId;
-		let guestId = match.guestId;
-		let enemyId = "";
-		if (socket.id == ownerId) {
-			enemyId = guestId;
-		}
-		else {
-			enemyId = ownerId;
-		}
-		socket.to(enemyId).emit('enemy-die', {
-			socketId: socket.id,
-			score: score
-		});
-	});
-
-	socket.on('game-over', (isWin) => {
-		let roomId = users[socket.id];
 		
-		if (isWin) {
-			if (socket.id == matches[roomId].ownerId) {
-				matches[roomId].player1GameWins++;
-				if (matches[roomId].player1GameWins == 5) {
-					matches[roomId].player1SetWins++;
-					if (matches[roomId].player1SetWins == 3) {
-						console.log(matches[roomId].ownerId, " win");
-						clearMatch(matches[roomId]);
-						return;
-					}
-				}
-
-				io.in(roomId).emit('game-start', {
-					userId1: matches[roomId].ownerId,
-					userId2: matches[roomId].guestId,
-					player1GameWins: matches[roomId].player1GameWins,
-					player1SetWins: matches[roomId].player1SetWins,
-					player2GameWins: matches[roomId].player2GameWins,
-					player2SetWins: matches[roomId].player2SetWins,
-				});
-			}
-			else {
-				matches[roomId].player2GameWins++;
-				if (matches[roomId].player2GameWins == 5) {
-					matches[roomId].player2SetWins++;
-					if (matches[roomId].player2SetWins == 3) {
-						console.log(matches[roomId].guestId, " win");
-						clearMatch(matches[roomId]);
-						return;
-					}
-				}
-
-				io.in(roomId).emit('game-start', {
-					userId1: matches[roomId].ownerId,
-					userId2: matches[roomId].guestId,
-					player1GameWins: matches[roomId].player1GameWins,
-					player1SetWins: matches[roomId].player1SetWins,
-					player2GameWins: matches[roomId].player2GameWins,
-					player2SetWins: matches[roomId].player2SetWins,
-				});
-			}
+		if (socket.id == ownerId) {
+			match.ownerScore = score;
 		}
 		else {
-			if (socket.id == matches[roomId].ownerId) {
-				matches[roomId].player2GameWins++;
-				if (matches[roomId].player2GameWins == 5) {
-					matches[roomId].player2SetWins++;
-					if (matches[roomId].player2SetWins == 3) {
-						console.log(matches[roomId].guestId, " win");
-						clearMatch(matches[roomId]);
-						return;
-					}
-				}
+			match.guestScore = score;
+		}
 
-				io.in(roomId).emit('game-start', {
-					userId1: matches[roomId].ownerId,
-					userId2: matches[roomId].guestId,
-					player1GameWins: matches[roomId].player1GameWins,
-					player1SetWins: matches[roomId].player1SetWins,
-					player2GameWins: matches[roomId].player2GameWins,
-					player2SetWins: matches[roomId].player2SetWins,
-				});
+		console.log(match);
+		
+		if (match.ownerScore > 0 && match.guestScore > 0) {
+			if (match.ownerScore > match.guestScore) {
+				match.ownerScore = 0;
+				match.guestScore = 0;
+				if (socket.id == matches[roomId].ownerId) {
+					matches[roomId].player1GameWins++;
+					if (matches[roomId].player1GameWins == gameWin) {
+						matches[roomId].player1SetWins++;
+						matches[roomId].player1GameWins = 0;
+						matches[roomId].player2GameWins = 0;
+						if (matches[roomId].player1SetWins == setWin) {
+							console.log(matches[roomId].ownerId, " win");
+							clearMatch(matches[roomId]);
+							return;
+						}
+					}
+	
+					io.in(roomId).emit('replay', {
+						username1: users[matches[roomId].ownerId].username,
+						username2: users[matches[roomId].guestId].username,
+						player1GameWins: matches[roomId].player1GameWins,
+						player1SetWins: matches[roomId].player1SetWins,
+						player2GameWins: matches[roomId].player2GameWins,
+						player2SetWins: matches[roomId].player2SetWins,
+					});
+				}
+				else {
+					matches[roomId].player2GameWins++;
+					if (matches[roomId].player2GameWins == gameWin) {
+						matches[roomId].player2SetWins++;
+						matches[roomId].player1GameWins = 0;
+						matches[roomId].player2GameWins = 0;
+						if (matches[roomId].player2SetWins == setWin) {
+							console.log(matches[roomId].guestId, " win");
+							clearMatch(matches[roomId]);
+							return;
+						}
+					}
+	
+
+					io.in(roomId).emit('replay', {
+						username1: users[matches[roomId].ownerId].username,
+						username2: users[matches[roomId].guestId].username,
+						player1GameWins: matches[roomId].player1GameWins,
+						player1SetWins: matches[roomId].player1SetWins,
+						player2GameWins: matches[roomId].player2GameWins,
+						player2SetWins: matches[roomId].player2SetWins,
+					});
+				}
 			}
 			else {
-				matches[roomId].player1GameWins++;
-				if (matches[roomId].player1GameWins == 5) {
-					matches[roomId].player1SetWins++;
-					if (matches[roomId].player1SetWins == 3) {
-						console.log(matches[roomId].ownerId, " win");
-						clearMatch(matches[roomId]);
-						return;
+				match.ownerScore = 0;
+				match.guestScore = 0;
+				if (socket.id == matches[roomId].ownerId) {
+					matches[roomId].player2GameWins++;
+					if (matches[roomId].player2GameWins == gameWin) {
+						matches[roomId].player2SetWins++;
+						matches[roomId].player1GameWins = 0;
+						matches[roomId].player2GameWins = 0;
+						if (matches[roomId].player2SetWins == setWin) {
+							console.log(matches[roomId].guestId, " win");
+							clearMatch(matches[roomId]);
+							return;
+						}
 					}
+	
+					io.in(roomId).emit('replay', {
+						username1: users[matches[roomId].ownerId].username,
+						username2: users[matches[roomId].guestId].username,
+						player1GameWins: matches[roomId].player1GameWins,
+						player1SetWins: matches[roomId].player1SetWins,
+						player2GameWins: matches[roomId].player2GameWins,
+						player2SetWins: matches[roomId].player2SetWins,
+					});
 				}
-
-				io.in(roomId).emit('game-start', {
-					userId1: matches[roomId].ownerId,
-					userId2: matches[roomId].guestId,
-					player1GameWins: matches[roomId].player1GameWins,
-					player1SetWins: matches[roomId].player1SetWins,
-					player2GameWins: matches[roomId].player2GameWins,
-					player2SetWins: matches[roomId].player2SetWins,
-				});
+				else {
+					matches[roomId].player1GameWins++;
+					if (matches[roomId].player1GameWins == gameWin) {
+						matches[roomId].player1SetWins++;
+						matches[roomId].player1GameWins = 0;
+						matches[roomId].player2GameWins = 0;
+						if (matches[roomId].player1SetWins == setWin) {
+							console.log(matches[roomId].ownerId, " win");
+							clearMatch(matches[roomId]);
+							return;
+						}
+					}
+	
+					io.in(roomId).emit('replay', {
+						username1: users[matches[roomId].ownerId].username,
+						username2: users[matches[roomId].guestId].username,
+						player1GameWins: matches[roomId].player1GameWins,
+						player1SetWins: matches[roomId].player1SetWins,
+						player2GameWins: matches[roomId].player2GameWins,
+						player2SetWins: matches[roomId].player2SetWins,
+					});
+				}
 			}
 		}
 	});
@@ -290,6 +309,7 @@ io.on('connection', socket => {
 })
 
 function clearMatch(match) {
+	io.in(match.matchId).emit('return-home');
 	users[match.ownerId].matchId = "";
 	users[match.ownerId].status = UserStatus.WaitingForInviting;
 	users[match.guestId].matchId = "";

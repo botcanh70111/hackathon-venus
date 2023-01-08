@@ -1,3 +1,5 @@
+var socket = io.connect('localhost:8888');
+
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -11,6 +13,9 @@ var trex = (function () {
      * @constructor
      * @export
      */
+    
+
+
     function Runner(outerContainerId, opt_config) {
         // Singleton
         if (Runner.instance_) {
@@ -73,7 +78,6 @@ var trex = (function () {
     }
     window['Runner'] = Runner;
 
-
     /**
      * Default game width.
      * @const
@@ -122,7 +126,7 @@ var trex = (function () {
         MIN_JUMP_HEIGHT: 35,
         MOBILE_SPEED_COEFFICIENT: 1.2,
         RESOURCE_TEMPLATE_ID: 'audio-resources',
-        SPEED: 6,
+        SPEED: 50,
         SPEED_DROP_COEFFICIENT: 3,
         ARCADE_MODE_INITIAL_TOP_POSITION: 35,
         ARCADE_MODE_TOP_POSITION_PERCENT: 0.1
@@ -816,12 +820,12 @@ var trex = (function () {
 
             
             // console.log("Game over");
-            this.customSendEvent();
-
+            this.customSendEvent(this.distanceRan);
         },
 
-        customSendEvent: function () {
+        customSendEvent: function (score) {
             console.log("customSendEvent");
+            socket.emit('im-die', score);
         },
 
         stop: function () {
