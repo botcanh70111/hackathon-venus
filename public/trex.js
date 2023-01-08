@@ -781,6 +781,10 @@ var trex = (function () {
          * Game over state.
          */
         gameOver: function () {
+
+            // console.log("Game over");
+            this.customSendEvent();
+
             this.playSound(this.soundFx.HIT);
             vibrate(200);
 
@@ -807,6 +811,11 @@ var trex = (function () {
 
             // Reset the time clock.
             this.time = getTimeStamp();
+        },
+
+        customSendEvent: function () {
+            console.log("customSendEvent");
+            
         },
 
         stop: function () {
