@@ -246,6 +246,12 @@ socket.on('player-left', () => {
 
 
 socket.on('return-home', () => {
-	socket.disconnect();
-	document.location.reload();
+	document.querySelector(".main").style.display = "block";
+    document.querySelector(".figure").style.display = "block";
+    document.querySelector("#room_info").style.display = "none";
+    document.getElementById("content-wrapper").classList.remove("dinosaur-active");
+});
+
+socket.on('player-broadcast', players => {
+	document.getElementById('online-players').innerHTML = `Users online: ${players}`;
 });

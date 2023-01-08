@@ -59,6 +59,8 @@ io.on('connection', socket => {
 	users[socket.id] = new User(socket);
 
 	console.log(socket.id);
+	socket.broadcast.emit('player-broadcast', Object.keys(users).length);
+	socket.emit('player-broadcast', Object.keys(users).length);
 
 	socket.on('change-username', (userInfo) => {
 		console.log('userinfo:', userInfo.userId);
@@ -273,6 +275,7 @@ io.on('connection', socket => {
 
 		if (matchId) {
 			delete matches[matchId];
+			io.in(matchId).emit('return-home');
 		}
 
 		let user = users[socket.id];
@@ -281,6 +284,8 @@ io.on('connection', socket => {
 			console.log('t3')
 			user.socket.emit('game-history-changed', getUserGameHistory(user.username));
 		}
+
+		socket.broadcast.emit('player-broadcast', Object.keys(users).length);
 	});
 })
 
