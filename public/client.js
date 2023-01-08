@@ -7,7 +7,7 @@ const uuid = () => {
 var host = window.location.href;
 console.log(host);
 //var socket = io.connect('http://18.139.89.76');
- var socket = io.connect('localhost:8888');
+ var socket = io.connect('hackathon-2023-venus.creativeforce-dev.io');
 
 let game_state;
 
@@ -208,7 +208,7 @@ socket.on('game-start', payload => {
 
 // t-rex 
 function startgame(payload) {
-    console.log('start-game');
+    console.log('start-game', payload);
 
     // remove lobby
     document.querySelector(".main").style.display = "none";
@@ -240,6 +240,8 @@ function startgame(payload) {
     dinosour.play();
 	
 	socket.on("replay", (payload) => {
+		console.log('replay', payload);
+
 		document.querySelector("#set1").innerHTML = payload.player1SetWins;
 		document.querySelector("#set2").innerHTML = payload.player2SetWins;
 		document.querySelector("#game1").innerHTML = payload.player1GameWins;
@@ -248,6 +250,17 @@ function startgame(payload) {
 		setTimeout(() => {
 			dinosour.restart();
 		}, 2000);
+	});
+
+	socket.on("return-home", () => {
+		document.querySelector(".score").remove();
+		document.querySelector(".main").style.display = "block";
+		document.querySelector(".figure").style.display = "block";
+		document.querySelector("#room_info").style.display = "none";
+	
+		document.getElementById("score").remove();
+	
+		dinosour.stop();
 	});
 }
 
@@ -301,17 +314,6 @@ socket.on('player-left', () => {
 	document.location.reload();
 });
 
-
-socket.on('return-home', () => {
-	document.querySelector(".score").remove();
-	document.querySelector(".main").style.display = "block";
-    document.querySelector(".figure").style.display = "block";
-    document.querySelector("#room_info").style.display = "none";
-
-	document.getElementById("score").remove();
-
-    //document.getElementById("content-wrapper").classList.remove("dinosaur-active");
-});
 
 socket.on('player-broadcast', players => {
 	document.getElementById('online-players').innerHTML = `Users online: ${players}`;
