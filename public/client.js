@@ -215,6 +215,10 @@ socket.on('game-start', payload => {
 function startgame(payload) {
     console.log('start-game', payload);
 
+	// play sound
+    var audio = new Audio('./assets/raw/start_match.mp3');
+    audio.play();
+
     // remove lobby
     document.querySelector(".main").style.display = "none";
     document.querySelector(".figure").style.display = "none";
