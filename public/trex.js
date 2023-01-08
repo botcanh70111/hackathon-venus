@@ -744,7 +744,7 @@ var trex = (function () {
                 if (Runner.keycodes.RESTART[keyCode] || this.isLeftClickOnCanvas(e) ||
                     (deltaTime >= this.config.GAMEOVER_CLEAR_TIME &&
                         Runner.keycodes.JUMP[keyCode])) {
-                    this.restart();
+                    // this.restart();
                 }
             } else if (this.paused && isjumpKey) {
                 // Reset the jump state
