@@ -185,13 +185,13 @@ io.on('connection', socket => {
 				if (matches[roomId].player1GameWins == 5) {
 					matches[roomId].player1SetWins++;
 					if (matches[roomId].player1SetWins == 3) {
-						//emit;;
+						console.log(matches[roomId].ownerId, " win");
 						clearMatch(matches[roomId]);
 						return;
 					}
 				}
 
-				socket.broadcast.to(roomId).emit('game-start', {
+				io.in(roomId).emit('game-start', {
 					userId1: matches[roomId].ownerId,
 					userId2: matches[roomId].guestId,
 					player1GameWins: matches[roomId].player1GameWins,
@@ -205,13 +205,13 @@ io.on('connection', socket => {
 				if (matches[roomId].player2GameWins == 5) {
 					matches[roomId].player2SetWins++;
 					if (matches[roomId].player2SetWins == 3) {
-						//emit;;
+						console.log(matches[roomId].guestId, " win");
 						clearMatch(matches[roomId]);
 						return;
 					}
 				}
 
-				socket.broadcast.to(roomId).emit('game-start', {
+				io.in(roomId).emit('game-start', {
 					userId1: matches[roomId].ownerId,
 					userId2: matches[roomId].guestId,
 					player1GameWins: matches[roomId].player1GameWins,
@@ -227,13 +227,13 @@ io.on('connection', socket => {
 				if (matches[roomId].player2GameWins == 5) {
 					matches[roomId].player2SetWins++;
 					if (matches[roomId].player2SetWins == 3) {
-						//emit new match;;
+						console.log(matches[roomId].guestId, " win");
 						clearMatch(matches[roomId]);
 						return;
 					}
 				}
 
-				socket.broadcast.to(roomId).emit('game-start', {
+				io.in(roomId).emit('game-start', {
 					userId1: matches[roomId].ownerId,
 					userId2: matches[roomId].guestId,
 					player1GameWins: matches[roomId].player1GameWins,
@@ -247,13 +247,13 @@ io.on('connection', socket => {
 				if (matches[roomId].player1GameWins == 5) {
 					matches[roomId].player1SetWins++;
 					if (matches[roomId].player1SetWins == 3) {
-						//emit new match;;
+						console.log(matches[roomId].ownerId, " win");
 						clearMatch(matches[roomId]);
 						return;
 					}
 				}
 
-				socket.broadcast.to(roomId).emit('game-start', {
+				io.in(roomId).emit('game-start', {
 					userId1: matches[roomId].ownerId,
 					userId2: matches[roomId].guestId,
 					player1GameWins: matches[roomId].player1GameWins,

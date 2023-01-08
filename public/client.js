@@ -229,3 +229,9 @@ socket.on('player-left', () => {
 	socket.disconnect();
 	document.location.reload();
 });
+
+
+socket.on('return-home', () => {
+	socket.disconnect();
+	document.location.reload();
+});
