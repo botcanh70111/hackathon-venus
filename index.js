@@ -13,8 +13,8 @@ app.get('/', function (req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
 });
 
-const gameWin = 2;
-const setWin = 1;
+const gameWin = 5;
+const setWin = 2;
 
 //User class
 const UserStatus = {
@@ -123,6 +123,13 @@ io.on('connection', socket => {
 	});
 
 	socket.on('create-match', (roomId) => {
+		for (var key in matches) {
+			if (matches[key] && matches[key].ownerId == socket.id) 
+			{
+				clearMatch(matches[key]);
+			}
+		}
+
 		socket.join(roomId);
 		console.log("Join room: ", roomId, socket.id);
 		matches[roomId] = new Match(roomId);
