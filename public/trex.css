@@ -170,3 +170,11 @@ html, body {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
+.enermy-point {
+  font-size: 20px;
+  color: white;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+}
