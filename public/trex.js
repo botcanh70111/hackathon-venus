@@ -78,7 +78,7 @@ var trex = (function () {
      * Default game width.
      * @const
      */
-    var DEFAULT_WIDTH = 600;
+    var DEFAULT_WIDTH = 800;
 
     /**
      * Frames per second.
@@ -427,7 +427,7 @@ var trex = (function () {
             this.dimensions.WIDTH = this.outerContainerEl.offsetWidth - padding * 2;
             this.dimensions.WIDTH = Math.min(DEFAULT_WIDTH, this.dimensions.WIDTH); //Arcade Mode
             if (this.activated) {
-                this.setArcadeModeContainerScale();
+                // this.setArcadeModeContainerScale();
             }
             
             // Redraw the elements back onto the canvas.
@@ -851,7 +851,7 @@ var trex = (function () {
          */
         setArcadeMode() {
             document.body.classList.add(Runner.classes.ARCADE_MODE);
-            this.setArcadeModeContainerScale();
+            // this.setArcadeModeContainerScale();
         },
 
         /**
