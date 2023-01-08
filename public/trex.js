@@ -427,7 +427,7 @@ var trex = (function () {
             this.dimensions.WIDTH = this.outerContainerEl.offsetWidth - padding * 2;
             this.dimensions.WIDTH = Math.min(DEFAULT_WIDTH, this.dimensions.WIDTH); //Arcade Mode
             if (this.activated) {
-                // this.setArcadeModeContainerScale();
+                this.setArcadeModeContainerScale();
             }
             
             // Redraw the elements back onto the canvas.
@@ -861,7 +861,7 @@ var trex = (function () {
          */
         setArcadeMode() {
             document.body.classList.add(Runner.classes.ARCADE_MODE);
-            // this.setArcadeModeContainerScale();
+            this.setArcadeModeContainerScale();
         },
 
         /**
@@ -880,9 +880,9 @@ var trex = (function () {
                                                   Runner.config.ARCADE_MODE_TOP_POSITION_PERCENT)) *
                   window.devicePixelRatio;
 
-            const cssScale = scale;
+            const cssScale = scale - 0.3;
             this.containerEl.style.transform =
-                'scale(' + cssScale + ') translateY(' + translateY + 'px)';
+                'scale(' + cssScale + ')'
         },
         
         /**
