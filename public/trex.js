@@ -447,7 +447,7 @@ var trex = (function () {
                     this.containerEl.style.width = this.dimensions.WIDTH + 'px';
                     this.containerEl.style.height = this.dimensions.HEIGHT + 'px';
                     this.distanceMeter.update(0, Math.ceil(this.distanceRan));
-                    this.stop();
+                    // this.stop();
                 } else {
                     this.tRex.draw(0, 0);
                 }
@@ -891,7 +891,7 @@ var trex = (function () {
         onVisibilityChange: function (e) {
             if (document.hidden || document.webkitHidden || e.type == 'blur' ||
                 document.visibilityState != 'visible') {
-                this.stop();
+                // this.stop();
             } else if (!this.crashed) {
                 this.tRex.reset();
                 this.play();

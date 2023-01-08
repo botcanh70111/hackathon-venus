@@ -192,6 +192,7 @@ function startgame() {
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
     // mount to the dom
+	console.log('dinosour', dinosour);
     var dinosour = new Runner('#content-wrapper');
     // do start background
     dinosour.playIntro();
