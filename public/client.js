@@ -15,7 +15,7 @@ let game_state;
 let i = '';
 let interval = setInterval(() => {
 	document.getElementById('searching-for-match').innerHTML =
-		'Game is started. \n Wating for other user' + i;
+		'Game on... \n Please wait for other player' + i;
 	i += '.';
 	if (i == '.....') i = '';
 }, 500);
