@@ -2777,7 +2777,7 @@ function startgameOffline() {
     document.getElementById("content-wrapper").classList.add("dinosaur-active");
 
     document.getElementById("content-wrapper").innerHTML += `
-	<div class="score">
+	<div class="score" id="score">
 		<span class="block enermy-point">Match Point: <span id="match_point">0</span></span>
 		<span class="block enermy-point">Set Point: <span id="me_point">0</span> - <span id="enermy_point">0</span></span>
 		<span class="block full">
