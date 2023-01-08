@@ -1021,7 +1021,7 @@ var trex = (function () {
 
     function createEnermyPoint(container, opt_classname) {
         var pointDiv = document.createElement('div');
-        pointDiv.className = opt_classname ? Runner.classes.ENERMY_POINT;
+        pointDiv.className = opt_classname ? Runner.classes.ENERMY_POINT: '';
         container.appendChild(pointDiv);
 
         return pointDiv;
