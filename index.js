@@ -13,6 +13,7 @@ app.get('/', function (req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
 });
 
+
 const gameWin = 5;
 const setWin = 2;
 
@@ -68,6 +69,11 @@ io.on('connection', socket => {
 	console.log(socket.id);
 	socket.broadcast.emit('player-broadcast', Object.keys(users).length);
 	socket.emit('player-broadcast', Object.keys(users).length);
+	users[socket.id].socket.emit('new-connection-client');
+	socket.on('set-user-id', (userId) => {
+		users[socket.id].userId = userId;
+		console.log('new userid: ', users[socket.id].userId);
+	});
 
 	socket.on('change-username', (userInfo) => {
 		console.log('userinfo:', userInfo.username);
@@ -93,7 +99,11 @@ io.on('connection', socket => {
 	socket.on('quick-game', (roomId) => {
 		for (key in matches) {
 			if (matches[key] && matches[key].ownerId != socket.id && matches[key].status == MatchStatus.WaitingForQuickGame) {
-				socket.join(matches[key].matchId);
+				console.log(users[matches[key].ownerId]);
+				console.log(users[matches[key].guestId]);
+				console.log(users);
+
+				socket.join(key);
 				matches[key].guestId = socket.id;
 				users[socket.id].status = UserStatus.Playing;
 				users[matches[key].ownerId].status = UserStatus.Playing;
@@ -146,8 +156,8 @@ io.on('connection', socket => {
 	});
 
 	socket.on('join-match', (roomId) => {
-		if (!matches[roomId] || matches[roomId].status != MatchStatus.InMatch) {
-			// send error
+		if (!matches[roomId]) {
+			return;
 		}
 
 		console.log("matches", matches);
@@ -196,57 +206,33 @@ io.on('connection', socket => {
 			if (match.ownerScore > match.guestScore) {
 				match.ownerScore = 0;
 				match.guestScore = 0;
-				if (socket.id == matches[roomId].ownerId) {
-					matches[roomId].player1GameWins++;
-					if (matches[roomId].player1GameWins == gameWin) {
-						matches[roomId].player1SetWins++;
-						matches[roomId].player1GameWins = 0;
-						matches[roomId].player2GameWins = 0;
-						if (matches[roomId].player1SetWins == setWin) {
-							console.log(matches[roomId].ownerId, " win");
-							clearMatch(matches[roomId]);
-							return;
-						}
-					}
-	
-					io.in(roomId).emit('replay', {
-						username1: users[matches[roomId].ownerId].username,
-						username2: users[matches[roomId].guestId].username,
-						player1GameWins: matches[roomId].player1GameWins,
-						player1SetWins: matches[roomId].player1SetWins,
-						player2GameWins: matches[roomId].player2GameWins,
-						player2SetWins: matches[roomId].player2SetWins,
-					});
-				}
-				else {
-					matches[roomId].player2GameWins++;
-					if (matches[roomId].player2GameWins == gameWin) {
-						matches[roomId].player2SetWins++;
-						matches[roomId].player1GameWins = 0;
-						matches[roomId].player2GameWins = 0;
-						if (matches[roomId].player2SetWins == setWin) {
-							console.log(matches[roomId].guestId, " win");
-							clearMatch(matches[roomId]);
-							return;
-						}
-					}
-	
 
-					io.in(roomId).emit('replay', {
-						username1: users[matches[roomId].ownerId].username,
-						username2: users[matches[roomId].guestId].username,
-						player1GameWins: matches[roomId].player1GameWins,
-						player1SetWins: matches[roomId].player1SetWins,
-						player2GameWins: matches[roomId].player2GameWins,
-						player2SetWins: matches[roomId].player2SetWins,
-					});
+				matches[roomId].player1GameWins++;
+				if (matches[roomId].player1GameWins == gameWin) {
+					matches[roomId].player1SetWins++;
+					matches[roomId].player1GameWins = 0;
+					matches[roomId].player2GameWins = 0;
+					if (matches[roomId].player1SetWins == setWin) {
+						console.log(matches[roomId].ownerId, " win");
+						clearMatch(matches[roomId]);
+						return;
+					}
 				}
+
+				io.in(roomId).emit('replay', {
+					username1: users[matches[roomId].ownerId].username,
+					username2: users[matches[roomId].guestId].username,
+					player1GameWins: matches[roomId].player1GameWins,
+					player1SetWins: matches[roomId].player1SetWins,
+					player2GameWins: matches[roomId].player2GameWins,
+					player2SetWins: matches[roomId].player2SetWins,
+				});
 			}
 			else {
 				match.ownerScore = 0;
 				match.guestScore = 0;
-				if (socket.id == matches[roomId].ownerId) {
-					matches[roomId].player2GameWins++;
+				
+				matches[roomId].player2GameWins++;
 					if (matches[roomId].player2GameWins == gameWin) {
 						matches[roomId].player2SetWins++;
 						matches[roomId].player1GameWins = 0;
@@ -266,29 +252,6 @@ io.on('connection', socket => {
 						player2GameWins: matches[roomId].player2GameWins,
 						player2SetWins: matches[roomId].player2SetWins,
 					});
-				}
-				else {
-					matches[roomId].player1GameWins++;
-					if (matches[roomId].player1GameWins == gameWin) {
-						matches[roomId].player1SetWins++;
-						matches[roomId].player1GameWins = 0;
-						matches[roomId].player2GameWins = 0;
-						if (matches[roomId].player1SetWins == setWin) {
-							console.log(matches[roomId].ownerId, " win");
-							clearMatch(matches[roomId]);
-							return;
-						}
-					}
-	
-					io.in(roomId).emit('replay', {
-						username1: users[matches[roomId].ownerId].username,
-						username2: users[matches[roomId].guestId].username,
-						player1GameWins: matches[roomId].player1GameWins,
-						player1SetWins: matches[roomId].player1SetWins,
-						player2GameWins: matches[roomId].player2GameWins,
-						player2SetWins: matches[roomId].player2SetWins,
-					});
-				}
 			}
 		}
 	});

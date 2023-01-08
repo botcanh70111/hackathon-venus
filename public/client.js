@@ -4,13 +4,6 @@ const uuid = () => {
 	);
 }
 
-var host = window.location.href;
-console.log(host);
-//var socket = io.connect('http://18.139.89.76');
- var socket = io.connect('hackathon-2023-venus.creativeforce-dev.io');
-
-let game_state;
-
 //Changes text on searching for match page
 let i = '';
 let interval = setInterval(() => {
@@ -228,13 +221,14 @@ function startgame(payload) {
 	document.getElementById("content-wrapper").innerHTML += `
 
 	<div class="score">
-		<span class="block enermy-point">${payload.username1} Match: <span id="set1">0</span></span>
-		<span class="block enermy-point">${payload.username1} Set: <span id="set2">0</span></span>
+		<span class="block enermy-point">${payload.username1} Set: <span id="set1">0</span></span>
+		<span class="block enermy-point">${payload.username2} Set: <span id="set2">0</span></span>
+
 		<span class="block full">
 			<span id="username1" class="inline-block name-me">${payload.username1}</span>
 			<span id="game1" class="inline-block point">0</span>
 			<span class="inline-block dash">-</span>
-			<span id="username2" class="inline-block name-e">${payload.username1}</span>
+			<span id="username2" class="inline-block name-e">${payload.username2}</span>
 			<span id="game2" class="inline-block point">0</span>
 		</span>
 	</div>`;
@@ -337,4 +331,15 @@ socket.on('return-home', () => {
 
 socket.on('player-broadcast', players => {
 	document.getElementById('online-players').innerHTML = `Users online: ${players}`;
+});
+
+//Gets number of online players
+socket.on('new-connection-client', () => {
+	let userId = localStorage.getItem('user_id');
+	if (!userId) {
+		localStorage.setItem('user_id', uuid());
+		userId = localStorage.getItem('user_id');
+	}
+
+	socket.emit("set-user-id", userId);
 });
