@@ -63,10 +63,15 @@
 								<button type="button" class="btn btn-primary hideFunc" onclick="quickGame();">Quick Game</button>
 							</div>
 							<div id="room_info" style="display: none;">
+								<div id="match-making" style="display: block;">
+									<h3 id="searching-for-match">Game is started. Please wait for other player...</h3>
+								</div>
+								
 								<span>Room ID: </span>
 								<span id="room_id"></span>
 								<br/>
 								<a id="room_id_copy" onclick="copyRoomIdToClipboard()">(Copy to clipboard)</a>
+								
 							</div>
 						</div>
 						<div class="form-group hideFunc">
@@ -96,9 +101,7 @@
 							<input class="menu-button" id="roomId" style="display: none;" type="button" />
 						</div>
 					</div>
-					<div id="match-making" style="display: none;">
-						<h3 id="searching-for-match">Game is started. Please wait for other player...</h3>
-					</div>
+					
 					<div style="display: none;" onresize="fit_canvas();">
 						<canvas id="drawing-canvas" width="600" height="500"></canvas>
 					</div>
